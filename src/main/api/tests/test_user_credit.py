@@ -25,7 +25,7 @@ class TestUserCredit:
         assert auth_admin_request.status_code == 200
         token = auth_admin_request.json().get('token')
 
-        `create_account_user_response = requests.post(
+        create_account_user_response = requests.post(
             url='http://localhost:4111/api/admin/create',
             json={
                 'username': username,
@@ -37,7 +37,7 @@ class TestUserCredit:
                 'Authorization': f'Bearer {token}'
             }
         )
-        assert create_account_user_response.status_code == 200`
+        assert create_account_user_response.status_code == 200
 
         auth_user_response = requests.post(
             url='http://localhost:4111/api/auth/token/login',

@@ -1,0 +1,22 @@
+# Окружение
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# pytest
+.pytest_cache/
+
+# Отчёты Allure
+allure-result/
+allure-report/
+
+# Логи и прочее
+*.log
+.DS_Store
