@@ -2,6 +2,7 @@ import pytest
 import requests
 import random
 
+from src.main.api.models import login_user_response
 from src.main.api.models.create_user_response import CreateUserResponse
 from src.main.api.models.login_user_request import LoginUserRequest
 from src.main.api.models.create_user_request import CreateUserRequest
@@ -87,8 +88,7 @@ class TestAccountDeposit:
         assert user_account_deposit_response.status_code == 200
         assert user_account_deposit_response.json().get('balance') == 1000
 
-
-
+## ИНВАЛИДНЫЙ ТЕСТ
     def test_account_deposit_invalid(self):
         username = generate_name()
 
@@ -104,6 +104,9 @@ class TestAccountDeposit:
         )
         token = create_admit_response.json().get('token')
         assert create_admit_response.status_code == 200
+        create_admit_response = LoginUserResponse(**create_admit_response.json())
+        assert login_user_request.username == create_admit_response.user.username
+        assert create_admit_response.user.role == 'ROLE_ADMIN'
 
         create_user_request = CreateUserRequest(username=username, password='Pas!sw0rd',role='ROLE_USER')
 
@@ -132,6 +135,8 @@ class TestAccountDeposit:
         )
         assert auth_user_response.status_code == 200
         token = auth_user_response.json().get('token')
+
+
 
         create_account_user_response = requests.post(
             url='http://localhost:4111/api/account/create',
