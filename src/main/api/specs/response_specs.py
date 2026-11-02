@@ -25,5 +25,5 @@ class ResponseSpecs:
     @staticmethod
     def request_no_limit():
         def confirm(response: Response):
-            assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY, response.text
+            assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT, response.text
         return confirm
