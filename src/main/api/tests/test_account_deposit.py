@@ -1,17 +1,19 @@
-import pytest
-import requests
 import random
 
-from src.main.api.models import login_user_response
+import pytest
+import requests
+
+from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.models.create_user_response import CreateUserResponse
 from src.main.api.models.login_user_request import LoginUserRequest
-from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.models.login_user_response import LoginUserResponse
+
 
 def generate_name():
     return f'ivangg{random.randint(1, 909999)}'
 
 
+@pytest.mark.api
 class TestAccountDeposit:
     def test_account_deposit_valid(self):
         username = generate_name()

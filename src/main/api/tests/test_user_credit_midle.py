@@ -1,5 +1,7 @@
 import random
 
+import pytest
+
 from src.main.api.models.account_credit_request import AccountCreditRequest
 from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.request.account_credit_requester import AccountCreditRequester
@@ -13,7 +15,8 @@ def generate_username():
     return f'ivangg{random.randint(1, 999999)}'
 
 
-class TestUserCreditMidle():
+@pytest.mark.api
+class TestUserCreditMidle:
     def test_user_credit_midle_valid(self):
         username = generate_username()
 

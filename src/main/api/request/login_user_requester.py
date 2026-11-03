@@ -1,11 +1,7 @@
-from requests import Response
+
 import requests
-from http import HTTPStatus
-
 from requests import Response
 
-from src.main.api.models.create_user_request import CreateUserRequest
-from src.main.api.models.create_user_response import CreateUserResponse
 from src.main.api.models.login_user_request import LoginUserRequest
 from src.main.api.models.login_user_response import LoginUserResponse
 from src.main.api.request.requester import Requester

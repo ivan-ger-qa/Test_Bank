@@ -1,4 +1,5 @@
 import random
+
 import pytest
 import requests
 
@@ -6,6 +7,7 @@ import requests
 def generate_username():
     return 'ivangg'+ random.randint(1,99999).__str__()
 
+@pytest.mark.api
 class TestTransferMoney:
     def test_transfer_money_valid(self):
         username = generate_username()

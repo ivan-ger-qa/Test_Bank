@@ -1,11 +1,16 @@
 import random
 
+import pytest
+
 from src.main.api.models.account_credit_request import AccountCreditRequest
 from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.request.account_credit_requester import AccountCreditRequester
 from src.main.api.request.create_account_requester import CreateAccountRequester
 from src.main.api.request.create_user_requester import CreateUserRequester
-from src.main.api.request.credit_repay_requester import CreditRepayRequest, CreditRepayRequester
+from src.main.api.request.credit_repay_requester import (
+    CreditRepayRequest,
+    CreditRepayRequester,
+)
 from src.main.api.specs.request_specs import RequestSpecs
 from src.main.api.specs.response_specs import ResponseSpecs
 
@@ -14,6 +19,7 @@ def generate_username():
     return f'ivangg{random.randint(0, 9000000)}'
 
 
+@pytest.mark.api
 class TestCreditRepayMidle:
 
     def test_credit_repay_valid(self):

@@ -1,12 +1,14 @@
-import requests
-import pytest
 import random
+
+import pytest
+import requests
 
 
 def generate_username():
     return f'ivangg{random.randint(1, 99999)}'
 
 
+@pytest.mark.api
 class TestUserCredit:
     def test_user_credit_valid(self):
         username = generate_username()

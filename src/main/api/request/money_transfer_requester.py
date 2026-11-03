@@ -1,11 +1,8 @@
 from http import HTTPStatus
-from urllib import response
 
 import requests
 from requests import Response
 
-from src.main.api.models.account_deposit_request import AccountDepositRequest
-from src.main.api.models.account_deposit_response import AccountDepositResponse
 from src.main.api.models.money_transfer_request import MoneyTransferRequest
 from src.main.api.models.money_transfer_response import MoneyTransferResponse
 from src.main.api.request.requester import Requester

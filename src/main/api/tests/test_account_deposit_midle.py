@@ -1,6 +1,8 @@
 import random
 from http import HTTPStatus
 
+import pytest
+
 from src.main.api.models.account_deposit_request import AccountDepositRequest
 from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.request.account_deposit_requester import AccountDepositRequester
@@ -14,6 +16,7 @@ def generate_name():
     return f'ivangg{random.randint(1, 909999)}'
 
 
+@pytest.mark.api
 class TestAccountDepositMidl:
     # присваиваем сгенерированное имя при старте метода
     def test_account_deposit_valid(self):

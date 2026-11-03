@@ -1,6 +1,6 @@
-import requests
 from http import HTTPStatus
 
+import requests
 from requests import Response
 
 from src.main.api.models.create_user_request import CreateUserRequest

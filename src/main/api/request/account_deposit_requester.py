@@ -8,9 +8,6 @@ from src.main.api.models.account_deposit_response import AccountDepositResponse
 from src.main.api.request.requester import Requester
 
 
-
-
-
 class AccountDepositRequester(Requester):
     def post(self,account_deposit_request: AccountDepositRequest)->AccountDepositResponse|Response:
         url=f'{self.base_url}/account/deposit'
