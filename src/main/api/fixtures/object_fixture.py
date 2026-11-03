@@ -5,6 +5,7 @@ import pytest
 
 from src.main.api.classes.api_manager import ApiManager
 from src.main.api.models.create_user_response import CreateUserResponse
+from src.main.api.steps.admin_steps import AdminSteps
 
 
 @pytest.fixture
@@ -15,10 +16,10 @@ def created_obj():
 
 
 def clean_user(objects: List[Any]):
-    api_manager = ApiManager(objects)
+    api_manager = AdminSteps(objects)
     for u in objects:
         if isinstance(u, CreateUserResponse):
-            api_manager.admin_step.delete_user(u.id)
+            api_manager.delete_user(u.id)
         else:
-            logging.warning(f'Error in delete_user: {u.id}')
+            logging.warning(f'Error in delete_user: {type(u)}')
 

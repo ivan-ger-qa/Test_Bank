@@ -9,22 +9,13 @@ from src.main.api.models.base_model import BaseModel
 
 
 class CrudRequester(HttpRequester):
-    def post(self, model:Optional[BaseModel])-> Response:
-        body = model.model_dump() if model is not None else None
+    def post(self, model: Optional[BaseModel] = None) -> Response:
+        return self._request('POST', model)
 
-        response = requests.post(
-            url=f'{Config.fetch('backendUrl')}{self.endpoint.value.url}',
-            headers=self.request_spec,
-            json=body
-        )
-        self.response_spec(response)
-        return response
-
-    def delete(self, user_id:int)->Response:
+    def delete(self, user_id: int) -> Response:
         response = requests.delete(
             url=f'{Config.fetch('backendUrl')}{self.endpoint.value.url}/{user_id}',
             headers=self.request_spec
         )
         self.response_spec(response)
         return response
-

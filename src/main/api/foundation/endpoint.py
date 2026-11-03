@@ -10,8 +10,8 @@ from src.main.api.models.create_user_response import CreateUserResponse
 @dataclass
 class EndpointConfiguration:
     url: str
-    request_model:Optional[Type[BaseModel]]
-    response_model:Optional[Type[BaseModel]]
+    request_model:Optional[Type[BaseModel]] = None
+    response_model:Optional[Type[BaseModel]] = None
 
 
 class Endpoint(Enum):
@@ -22,9 +22,7 @@ class Endpoint(Enum):
     )
 
     ADMIN_DELETE_USER = EndpointConfiguration(
-        url='/admin/create',
-        request_model=None,
-        response_model=None
+        url='/admin/users'
     )
 
 

@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, Dict
 
+import requests
 from requests import Response
 
 from src.main.api.configs.config import Config
@@ -7,12 +8,14 @@ from src.main.api.foundation.endpoint import Endpoint
 
 
 class HttpRequester:
-    def __init__(self, request_spec: dict[str, str], endpoint: Endpoint, response_spec: Callable[[Response], None]):
+    def __init__(self, request_spec: Dict[str, str], endpoint: Endpoint, response_spec: Callable[[Response], None]):
         self.request_spec = request_spec
         self.endpoint = endpoint
         self.response_spec = response_spec
 
-    def request(self, endpoint, model=None):
-        url = f'{Config.fetch('backendUrl')}{endpoint.value.url}'
-        body = None if endpoint.value.request_model is None else model.model_dump()
-        ...
+    def _request(self, method, model=None):
+        url = f'{Config.fetch('backendUrl')}{self.endpoint.value.url}'
+        body = model.model_dump() if model is not None else None
+        response = requests.request(method=method, url=url, headers=self.request_spec, json=body)
+        self.response_spec(response)
+        return response
