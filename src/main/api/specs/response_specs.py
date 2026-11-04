@@ -27,3 +27,9 @@ class ResponseSpecs:
         def confirm(response: Response):
             assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT, response.text
         return confirm
+
+    @staticmethod
+    def request_not_authentication():
+        def confirm(response: Response):
+            assert response.status_code == HTTPStatus.UNAUTHORIZED, response.text
+        return confirm
