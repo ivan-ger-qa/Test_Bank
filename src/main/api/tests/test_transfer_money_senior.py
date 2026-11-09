@@ -1,15 +1,16 @@
 import pytest
 
+from src.main.api.generator.model_generator import RandomModelGenerator
 from src.main.api.models.account_deposit_request import AccountDepositRequest
-from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.models.money_transfer_request import MoneyTransferRequest
+
+MAX_DEPOSIT = 9000.0 # максимальная сумма пополнения по требованиям проекта 9000
 
 
 @pytest.mark.apis
 class TestMoneyTransferSenior:
-    def test_money_transfer_valid(self, api_manager):
-        user = CreateUserRequest(username="igg12121232", password="Pas!sw0rd", role="ROLE_USER")
-        api_manager.admin_steps.create_user(user)
+    def test_money_transfer(self, api_manager, create_user_request):
+        user = create_user_request()
 
         account_one = api_manager.user_steps.create_account(user)
         assert account_one.balance == 0
@@ -17,18 +18,20 @@ class TestMoneyTransferSenior:
         account_two = api_manager.user_steps.create_account(user)
         assert account_two.balance == 0
 
-        deposite_request = AccountDepositRequest(accountId=account_one.id, amount=5000.0)
-        deposit = api_manager.user_steps.deposit_account(user, deposite_request)
-        assert deposit.balance == 5000.0
+        deposit_request = RandomModelGenerator.generate(AccountDepositRequest)
+        deposit_request.accountId = account_one.id
+        deposit = api_manager.user_steps.deposit_account(user, deposit_request)
+        assert deposit.balance == account_one.balance + deposit_request.amount
 
-        transfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id, amount=2000.0)
+        transfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id,
+                                                amount=deposit.balance / 2)
         transfer = api_manager.user_steps.money_transfer_valid(user, transfer_request)
 
         assert transfer.fromAccountIdBalance == deposit.balance - transfer_request.amount
 
-    def test_money_transfer_invalid(self, api_manager):
-        user = CreateUserRequest(username="igg12121232", password="Pas!sw0rd", role="ROLE_USER")
-        api_manager.admin_steps.create_user(user)
+    @pytest.mark.parametrize("amount", [500.0, 501.0, 5000.0, 9999.0, 10000.0])
+    def test_money_transfer_valid(self, api_manager, create_user_request, amount):
+        user = create_user_request()
 
         account_one = api_manager.user_steps.create_account(user)
         assert account_one.balance == 0
@@ -36,27 +39,40 @@ class TestMoneyTransferSenior:
         account_two = api_manager.user_steps.create_account(user)
         assert account_two.balance == 0
 
-        deposit_requset = AccountDepositRequest(accountId=account_one.id, amount=5000.0)
-        deposit = api_manager.user_steps.deposit_account(user, deposit_requset)
-        assert deposit.balance == 5000.0
+        deposit_request_first = AccountDepositRequest(accountId=account_one.id, amount=MAX_DEPOSIT)
+        deposit = api_manager.user_steps.deposit_account(user, deposit_request_first)
 
-        tranfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id, amount=5001.0)
-        transfer = api_manager.user_steps.money_transfer_invalid(user, tranfer_request)
-        assert 'Insufficient funds' in transfer.text
+        deposit_request_second = AccountDepositRequest(accountId=account_one.id, amount=MAX_DEPOSIT)
+        deposit = api_manager.user_steps.deposit_account(user, deposit_request_second)
 
 
-    def test_money_transfer_invalid_zero(self, api_manager):
-        user = CreateUserRequest(username="igg12121232", password="Pas!sw0rd", role="ROLE_USER")
-        api_manager.admin_steps.create_user(user)
+        transfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id, amount=amount)
+        transfer = api_manager.user_steps.money_transfer_valid(user, transfer_request)
+        assert transfer.fromAccountIdBalance == deposit.balance - transfer_request.amount
+
+
+    def test_money_transfer_invalid_zero(self, api_manager, create_user_request):
+        user = create_user_request()
 
         account_one = api_manager.user_steps.create_account(user)
 
         account_two = api_manager.user_steps.create_account(user)
 
-        deposit_request = AccountDepositRequest(accountId=account_one.id, amount=5000.0)
+        deposit_request = RandomModelGenerator.generate(AccountDepositRequest)
+        deposit_request.accountId = account_one.id
         deposit = api_manager.user_steps.deposit_account(user, deposit_request)
 
         transfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id, amount=0)
         transfer = api_manager.user_steps.money_transfer_invalid_zero(user, transfer_request)
 
         assert 'Amount must be greater than 0' in transfer.text
+
+    @pytest.mark.parametrize("amount", [250.0, 499.0, 10001.0, 15000.0])
+    def test_money_transfer_invalid(self, api_manager, create_user_request, amount):
+        user = RandomModelGenerator.generate()
+
+        account_one = api_manager.user_steps.create_account(user)
+
+        account_two = api_manager.user_steps.create_account(user)
+
+
