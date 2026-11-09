@@ -89,6 +89,15 @@ class UserSteps(BaseSteps):
         ).post(account_credit_request)
         return credit_response
 
+    # Swagger обещает 422 "Credit amount cannot exceed 15000", банк отдаёт 400 "Amount must be between 5000 and 15000"
+    def credit_user_out_of_limit(self, create_user_request:CreateUserRequest, account_credit_request: AccountCreditRequest):
+        credit_response = CrudRequester(
+            RequestSpecs.auth_headers(create_user_request.username,create_user_request.password),
+            Endpoint.USER_CREDIT,
+            ResponseSpecs.request_bad()
+        ).post(account_credit_request)
+        return credit_response
+
     def repay_credit_valid(self, create_user_request:CreateUserRequest, credit_repay_request: CreditRepayRequest):
         repay_response = ValidateCrudRequester(
             RequestSpecs.auth_headers(create_user_request.username,create_user_request.password),
