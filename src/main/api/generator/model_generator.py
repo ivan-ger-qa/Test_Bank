@@ -1,6 +1,6 @@
 import random
 import uuid
-from typing import Any, get_type_hints, get_origin, get_args, Annotated
+from typing import Annotated, Any, get_args, get_origin, get_type_hints
 
 import rstr
 

@@ -15,6 +15,12 @@ class TestCreditUser:
         credit_request.accountId = account.id
         credit = api_manager.user_steps.credit_user_valid(user, credit_request)
         assert credit.balance == credit_request.amount
+        assert credit.id == account.id
+
+        credit_history = api_manager.user_steps.get_credit(user)
+        credits = [c for c in credit_history.credits if c.creditId == credit.creditId]
+        assert len(credits) == 1
+        assert credits[0].balance == -credit_request.amount
 
     @pytest.mark.parametrize(
         'amount,termMonths',
@@ -35,6 +41,7 @@ class TestCreditUser:
         credit_request = AccountCreditRequest(accountId=account.id, amount=amount, termMonths=termMonths)
         credit = api_manager.user_steps.credit_user_valid(user, credit_request)
         assert credit.balance == credit_request.amount
+        assert credit.id == account.id
 
     @pytest.mark.parametrize(
         'amount,termMonths,error_text',
@@ -60,7 +67,10 @@ class TestCreditUser:
         credit = api_manager.user_steps.credit_user_out_of_limit(user, credit_request)
         assert error_text in credit.text
 
-    def test_credit_user_forbiden(self, api_manager, create_user_request):
+        account_after = api_manager.user_steps.get_account(user, account.id)
+        assert account_after.balance == account.balance
+
+    def test_credit_user_forbidden(self, api_manager, create_user_request):
         user = create_user_request()
 
         account = api_manager.user_steps.create_account(user)
@@ -68,3 +78,7 @@ class TestCreditUser:
         credit_request = AccountCreditRequest(accountId=account.id, amount=10000.0, termMonths=12)
         credit = api_manager.user_steps.credit_user_invalid(user, credit_request)
         assert 'ROLE_CREDIT access required' in credit.text
+
+        account_after = api_manager.user_steps.get_account(user, account.id)
+        assert account_after.balance == account.balance
+        assert account_after.transactions == []
