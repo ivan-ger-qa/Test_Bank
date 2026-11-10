@@ -1,6 +1,8 @@
 from src.main.api.foundation.endpoint import Endpoint
 from src.main.api.foundation.requesters.crud_requester import CrudRequester
-from src.main.api.foundation.requesters.validate_crud_requester import ValidateCrudRequester
+from src.main.api.foundation.requesters.validate_crud_requester import (
+    ValidateCrudRequester,
+)
 from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.specs.response_specs import ResponseSpecs
 from src.main.api.steps.base_steps import BaseSteps

@@ -6,6 +6,7 @@ from src.main.api.models.account_deposit_request import AccountDepositRequest
 from src.main.api.models.credit_repay_request import CreditRepayRequest
 from src.main.api.models.money_transfer_request import MoneyTransferRequest
 
+MAX_DEPOSIT = 9000.0
 
 @pytest.mark.apis
 class TestCreditRepay:
@@ -24,6 +25,14 @@ class TestCreditRepay:
         repay = api_manager.user_steps.repay_credit_valid(user, repay_request)
         assert repay.amountDeposited == repay_request.amount
         assert credit.creditId == repay.creditId
+
+        account_after = api_manager.user_steps.get_account(user, account.id)
+        assert account_after.balance == credit.balance - repay_request.amount
+
+        credit_history = api_manager.user_steps.get_credit(user)
+        credits = [c for c in credit_history.credits if c.creditId == credit.creditId]
+        assert len(credits) == 1
+        assert credits[0].balance == -credit.amount + repay_request.amount
 
     @pytest.mark.parametrize(
         'offset, error_text', [
@@ -52,6 +61,14 @@ class TestCreditRepay:
         repay = api_manager.user_steps.repay_credit_invalid(user, repay_request)
         assert error_text in repay.text
 
+        account_after = api_manager.user_steps.get_account(user, account.id)
+        assert account_after.balance == credit.balance
+
+        credit_history = api_manager.user_steps.get_credit(user)
+        credits = [c for c in credit_history.credits if c.creditId == credit.creditId]
+        assert len(credits) == 1
+        assert credits[0].balance == -credit.amount
+
     def test_credit_repay_no_limit(self, api_manager, create_user_request):
         user = create_user_request(role='ROLE_CREDIT_SECRET')
 
@@ -63,12 +80,47 @@ class TestCreditRepay:
         credit = api_manager.user_steps.credit_user_valid(user, credit_request)
 
         transfer_request = MoneyTransferRequest(fromAccountId=account_one.id, toAccountId=account_two.id,
-                                                amount=credit.amount/2)
+                                                amount=credit.amount / 2)
         api_manager.user_steps.money_transfer_valid(user, transfer_request)
 
         repay_request = CreditRepayRequest(creditId=credit.creditId, accountId=account_one.id, amount=credit.amount)
         repay = api_manager.user_steps.repay_credit_invalid(user, repay_request)
         assert 'Insufficient funds' in repay.text
+
+        account_after = api_manager.user_steps.get_account(user, account_one.id)
+        assert account_after.balance == credit.balance / 2
+
+        credit_history = api_manager.user_steps.get_credit(user)
+        credits = [c for c in credit_history.credits if c.creditId == credit.creditId]
+        assert len(credits) == 1
+        assert credits[0].balance == -credit.amount
+
+    def test_credit_repay_twice(self, api_manager, create_user_request):
+        user = create_user_request(role='ROLE_CREDIT_SECRET')
+
+        account = api_manager.user_steps.create_account(user)
+
+        deposit_request = AccountDepositRequest(accountId=account.id, amount=MAX_DEPOSIT)
+        api_manager.user_steps.deposit_account(user, deposit_request)
+        api_manager.user_steps.deposit_account(user, deposit_request)
+
+        credit_request = RandomModelGenerator.generate(AccountCreditRequest)
+        credit_request.accountId = account.id
+        credit = api_manager.user_steps.credit_user_valid(user, credit_request)
+
+        repay_request = CreditRepayRequest(creditId=credit.creditId, accountId=account.id, amount=credit.amount)
+        api_manager.user_steps.repay_credit_valid(user, repay_request)
+        account_after_first = api_manager.user_steps.get_account(user, account.id)
+        repay_responce = api_manager.user_steps.credit_repay_conflict(user, repay_request)
+        assert 'already been repaid' in repay_responce.text
+
+        account_after_second = api_manager.user_steps.get_account(user, account.id)
+        assert account_after_second.balance == account_after_first.balance
+
+        credit_history = api_manager.user_steps.get_credit(user)
+        credits = [c for c in credit_history.credits if c.creditId == credit.creditId]
+        assert len(credits) == 1
+        assert credits[0].balance == -credit.amount + repay_request.amount
 
 
 

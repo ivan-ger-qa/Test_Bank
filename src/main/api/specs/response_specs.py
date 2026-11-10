@@ -40,3 +40,10 @@ class ResponseSpecs:
             assert response.status_code == HTTPStatus.FORBIDDEN, response.text
         return confirm
 
+    @staticmethod
+    def request_conflict():
+        def confirm(response: Response):
+            assert response.status_code == HTTPStatus.CONFLICT, response.text
+        return confirm
+
+

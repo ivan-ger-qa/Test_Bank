@@ -1,5 +1,5 @@
 import logging
-from typing import List, Any
+from typing import Any
 
 import pytest
 
@@ -9,12 +9,12 @@ from src.main.api.steps.admin_steps import AdminSteps
 
 @pytest.fixture
 def created_obj():
-    objects: List[Any] = []
+    objects: list[Any] = []
     yield objects
     clean_user(objects)
 
 
-def clean_user(objects: List[Any]):
+def clean_user(objects: list[Any]):
     api_manager = AdminSteps(objects)
     for u in objects:
         if isinstance(u, CreateUserResponse):
