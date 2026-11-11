@@ -39,7 +39,7 @@ class TestAccountDepositSenior:
         account = api_manager.user_steps.create_account(user)
 
         deposit_request = AccountDepositRequest(accountId=account.id, amount=amount)
-        deposit = api_manager.user_steps.deposit_account_invalid_over_mone(user, deposit_request)
+        deposit = api_manager.user_steps.deposit_account_invalid_over_money(user, deposit_request)
         assert 'Amount must be between 1000 and 9000' in deposit.text
 
         account_after = api_manager.user_steps.get_account(user, account.id)

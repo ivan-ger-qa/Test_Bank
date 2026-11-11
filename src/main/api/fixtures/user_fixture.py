@@ -11,5 +11,4 @@ def create_user_request(api_manager):
         user.role = role
         api_manager.admin_steps.create_user(user)
         return user
-
     return _make

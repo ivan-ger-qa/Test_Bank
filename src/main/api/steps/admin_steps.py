@@ -1,3 +1,5 @@
+import allure
+
 from src.main.api.foundation.endpoint import Endpoint
 from src.main.api.foundation.requesters.crud_requester import CrudRequester
 from src.main.api.foundation.requesters.validate_crud_requester import (
@@ -9,6 +11,8 @@ from src.main.api.steps.base_steps import BaseSteps
 
 
 class AdminSteps(BaseSteps):
+
+    @allure.step('Админ: создаем пользователя')
     def create_user(self, create_user_request: CreateUserRequest):
         user_response = ValidateCrudRequester(
             self.admin_headers,
@@ -19,7 +23,7 @@ class AdminSteps(BaseSteps):
         self.created_obj.append(user_response)
         return user_response
 
-
+    @allure.step('Админ: Удаляем пользователя')
     def delete_user(self, user_id:int):
         CrudRequester(
             self.admin_headers,
@@ -27,12 +31,12 @@ class AdminSteps(BaseSteps):
             ResponseSpecs.request_ok()
         ).delete(user_id)
 
-
-    def create_user_invalid(self, create_user_request: CreateUserRequest):
-        invalid_user_response= CrudRequester(
-            self.admin_headers,
-            Endpoint.ADMIN_CREATE_USER,
-            ResponseSpecs.request_bad()
-        ).post(create_user_request)
-
-        return invalid_user_response
+    # @allure.step('Админ Негатив: создаем пользователя с неверными данными 400')
+    # def create_user_invalid(self, create_user_request: CreateUserRequest):
+    #     invalid_user_response= CrudRequester(
+    #         self.admin_headers,
+    #         Endpoint.ADMIN_CREATE_USER,
+    #         ResponseSpecs.request_bad()
+    #     ).post(create_user_request)
+    #
+    #     return invalid_user_response
