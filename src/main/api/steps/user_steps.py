@@ -1,3 +1,5 @@
+import allure
+
 from src.main.api.foundation.endpoint import Endpoint
 from src.main.api.foundation.requesters.crud_requester import CrudRequester
 from src.main.api.foundation.requesters.validate_crud_requester import (
@@ -11,8 +13,6 @@ from src.main.api.models.money_transfer_request import MoneyTransferRequest
 from src.main.api.specs.request_specs import RequestSpecs
 from src.main.api.specs.response_specs import ResponseSpecs
 from src.main.api.steps.base_steps import BaseSteps
-
-import allure
 
 
 class UserSteps(BaseSteps):
@@ -56,7 +56,7 @@ class UserSteps(BaseSteps):
 
     @allure.step('Негатив: сумма вне лимита 1000–9000 — 400')
     def deposit_account_invalid_over_money(self, create_user_request: CreateUserRequest,
-                                          account_deposit_request: AccountDepositRequest):
+                                           account_deposit_request: AccountDepositRequest):
         deposit_response = CrudRequester(
             RequestSpecs.auth_headers(create_user_request.username, create_user_request.password),
             Endpoint.ACCOUNT_DEPOSIT,
