@@ -1,10 +1,10 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 
 class Config:
     _isinstance = None
-    _dictionary = {}
+    _dictionary: ClassVar[dict[str, str]] = {}
 
     def __new__(cls):
         if cls._isinstance is None:

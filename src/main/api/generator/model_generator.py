@@ -9,8 +9,8 @@ from src.main.api.generator.creation_rule import CreationRule
 
 class RandomModelGenerator:
     @staticmethod
-    def generate(cls: type) -> Any:
-        type_hints = get_type_hints(cls, include_extras=True)
+    def generate(model: type) -> Any:
+        type_hints = get_type_hints(model, include_extras=True)
         init_data = {}
         for field_name, field_type in type_hints.items():
             rule = None
@@ -23,9 +23,9 @@ class RandomModelGenerator:
             if rule is not None:
                 value = RandomModelGenerator._generate_from_regex(rule.regex, actual_type)
             else:
-                value = RandomModelGenerator._generane_value(actual_type)
+                value = RandomModelGenerator._generate_value(actual_type)
             init_data[field_name] = value
-        return cls(**init_data)
+        return model(**init_data)
 
     @staticmethod
     def _generate_from_regex(regex: str, field_type: type) -> Any:
@@ -37,7 +37,7 @@ class RandomModelGenerator:
         return generated
 
     @staticmethod
-    def _generane_value(field_type: type) -> Any:
+    def _generate_value(field_type: type) -> Any:
         if field_type is str:
             return str(uuid.uuid4())[:8]
         if field_type is int:

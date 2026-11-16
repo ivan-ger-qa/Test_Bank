@@ -1,6 +1,6 @@
 import pytest
 
-from src.main.db.engine import engine, SessionLocal
+from src.main.db.engine import SessionLocal, engine
 
 
 @pytest.fixture

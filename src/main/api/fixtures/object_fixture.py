@@ -6,6 +6,8 @@ import pytest
 from src.main.api.models.create_user_response import CreateUserResponse
 from src.main.api.steps.admin_steps import AdminSteps
 
+logger = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def created_obj():
@@ -20,5 +22,5 @@ def clean_user(objects: list[Any]):
         if isinstance(u, CreateUserResponse):
             api_manager.delete_user(u.id)
         else:
-            logging.warning(f'Error in delete_user: {type(u)}')
+            logger.warning(f'Error in delete_user: {type(u)}')
 

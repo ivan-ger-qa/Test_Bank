@@ -157,9 +157,9 @@ class UserSteps(BaseSteps):
     @allure.step('Негатив: повторное погашение — 409')
     def credit_repay_conflict(self, create_user_request: CreateUserRequest,
                               credit_repay_request: CreditRepayRequest):
-        transfer_response = CrudRequester(
+        repay_response = CrudRequester(
             RequestSpecs.auth_headers(create_user_request.username, create_user_request.password),
             Endpoint.CREDIT_REPAY,
             ResponseSpecs.request_conflict()
         ).post(credit_repay_request)
-        return transfer_response
+        return repay_response
