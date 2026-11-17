@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from http import HTTPStatus
 
 from requests import Response
@@ -5,45 +6,50 @@ from requests import Response
 
 class ResponseSpecs:
     @staticmethod
-    def request_ok():
-        def confirm(response: Response):
+    def request_ok() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.OK, response.text
+
         return confirm
 
     @staticmethod
-    def request_create():
-        def confirm(response: Response):
+    def request_create() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.CREATED, response.text
+
         return confirm
 
     @staticmethod
-    def request_bad():
-        def confirm(response: Response):
+    def request_bad() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.BAD_REQUEST, response.text
+
         return confirm
 
     @staticmethod
-    def request_no_limit():
-        def confirm(response: Response):
+    def request_no_limit() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT, response.text
+
         return confirm
 
     @staticmethod
-    def request_not_authentication():
-        def confirm(response: Response):
+    def request_not_authentication() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.UNAUTHORIZED, response.text
+
         return confirm
 
     @staticmethod
-    def request_forbidden():
-        def confirm(response: Response):
+    def request_forbidden() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.FORBIDDEN, response.text
+
         return confirm
 
     @staticmethod
-    def request_conflict():
-        def confirm(response: Response):
+    def request_conflict() -> Callable[[Response], None]:
+        def confirm(response: Response) -> None:
             assert response.status_code == HTTPStatus.CONFLICT, response.text
+
         return confirm
-
-

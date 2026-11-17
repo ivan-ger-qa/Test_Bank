@@ -7,15 +7,17 @@ from requests import Response
 
 from src.main.api.configs.config import Config
 from src.main.api.foundation.endpoint import Endpoint
+from src.main.api.models.base_model import BaseModel
 
 
 class HttpRequester:
-    def __init__(self, request_spec: dict[str, str], endpoint: Endpoint, response_spec: Callable[[Response], None]):
+    def __init__(self, request_spec: dict[str, str], endpoint: Endpoint,
+                 response_spec: Callable[[Response], None]) -> None:
         self.request_spec = request_spec
         self.endpoint = endpoint
         self.response_spec = response_spec
 
-    def _request(self, method, model=None, path_suffix=None):
+    def _request(self, method: str, model: BaseModel | None = None, path_suffix:int | str | None = None) -> Response:
         url = f'{Config.fetch('backendUrl')}{self.endpoint.value.url}'
         if path_suffix is not None:
             url = f'{url}/{path_suffix}'

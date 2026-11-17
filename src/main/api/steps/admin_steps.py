@@ -6,6 +6,7 @@ from src.main.api.foundation.requesters.validate_crud_requester import (
     ValidateCrudRequester,
 )
 from src.main.api.models.create_user_request import CreateUserRequest
+from src.main.api.models.create_user_response import CreateUserResponse
 from src.main.api.specs.response_specs import ResponseSpecs
 from src.main.api.steps.base_steps import BaseSteps
 
@@ -13,7 +14,7 @@ from src.main.api.steps.base_steps import BaseSteps
 class AdminSteps(BaseSteps):
 
     @allure.step('Админ: создаем пользователя')
-    def create_user(self, create_user_request: CreateUserRequest):
+    def create_user(self, create_user_request: CreateUserRequest) -> CreateUserResponse:
         user_response = ValidateCrudRequester(
             self.admin_headers,
             Endpoint.ADMIN_CREATE_USER,
@@ -24,7 +25,7 @@ class AdminSteps(BaseSteps):
         return user_response
 
     @allure.step('Админ: Удаляем пользователя')
-    def delete_user(self, user_id:int):
+    def delete_user(self, user_id: int) -> None:
         CrudRequester(
             self.admin_headers,
             Endpoint.ADMIN_DELETE_USER,

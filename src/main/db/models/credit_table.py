@@ -12,6 +12,6 @@ class Credit(Base):
     balance = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f'Credit(id={self.id}, account_id={self.account_id}, amount={self.amount}, '
                 f'term_months={self.term_months}, balance={self.balance}, created_at={self.created_at})')

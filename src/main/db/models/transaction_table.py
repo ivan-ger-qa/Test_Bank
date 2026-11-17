@@ -13,7 +13,7 @@ class Transaction(Base):
     transaction_type = Column(String(20), nullable=False)
     created_at = Column(DateTime, nullable=False)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f'Transaction(id={self.id}, to_account_id={self.to_account_id}, from_account_id={self.from_account_id}, '
                 f'credit_id={self.credit_id}, amount={self.amount}, transaction_type={self.transaction_type}, '
                 f'created_at={self.created_at})')
