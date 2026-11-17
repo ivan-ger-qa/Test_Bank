@@ -15,6 +15,7 @@ __pycache__/
 
 # Отчёты Allure
 allure-result/
+allure-results/
 allure-report/
 
 # Логи и прочее

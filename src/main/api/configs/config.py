@@ -1,12 +1,12 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar, Self
 
 
 class Config:
     _isinstance = None
-    _dictionary = {}
+    _dictionary: ClassVar[dict[str, str]] = {}
 
-    def __new__(cls):
+    def __new__(cls) -> Self:
         if cls._isinstance is None:
             cls._isinstance = super().__new__(cls)
 

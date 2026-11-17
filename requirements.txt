@@ -1,9 +1,12 @@
 # Зависимости для запуска автотестов (сам банк-сервер сюда не входит).
 # Установка: pip install -r requirements.txt
-pytest==9.1.1
+pytest==9.2.0
 requests==2.34.2
-pydantic==2.14.1
-# Плагин отчётов Allure (пока не используется в тестах, нужен для модуля Allure)
+pydantic==2.14.3
+
 allure-pytest==2.16.2
 
 rstr==3.2.2
+
+SQLAlchemy==2.1.8
+psycopg2-binary==2.9.13
